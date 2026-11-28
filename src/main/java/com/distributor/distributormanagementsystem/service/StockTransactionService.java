@@ -31,4 +31,66 @@ public class StockTransactionService {
     public void deleteTransaction(Long id) {
         stockTransactionRepository.deleteById(id);
     }
+
+    public int getWarehouseStock(Long productId, Long warehouseId) {
+
+        List<StockTransaction> transactions =
+                stockTransactionRepository.findByProductIdAndWarehouseId(
+                        productId,
+                        warehouseId
+                );
+
+        int stock = 0;
+
+        for (StockTransaction transaction : transactions) {
+
+            String type = transaction.getTransactionType();
+
+            if ("RECEIVE".equals(type)) {
+                stock += transaction.getQuantity();
+
+            } else if ("LOAD_TO_LORRY".equals(type)) {
+                stock -= transaction.getQuantity();
+
+            } else if ("RETURN".equals(type)) {
+                stock += transaction.getQuantity();
+
+            } else if ("ADJUSTMENT".equals(type)) {
+                stock += transaction.getQuantity();
+            }
+        }
+
+        return stock;
+    }
+
+    public int getLorryStock(Long productId, Long lorryId) {
+
+        List<StockTransaction> transactions =
+                stockTransactionRepository.findByProductIdAndLorryId(
+                        productId,
+                        lorryId
+                );
+
+        int stock = 0;
+
+        for (StockTransaction transaction : transactions) {
+
+            String type = transaction.getTransactionType();
+
+            if ("LOAD_TO_LORRY".equals(type)) {
+                stock += transaction.getQuantity();
+
+            } else if ("SALE".equals(type)) {
+                stock -= transaction.getQuantity();
+
+            } else if ("RETURN".equals(type)) {
+                stock -= transaction.getQuantity();
+
+            } else if ("ADJUSTMENT".equals(type)) {
+                stock += transaction.getQuantity();
+            }
+        }
+
+        return stock;
+    }
 }

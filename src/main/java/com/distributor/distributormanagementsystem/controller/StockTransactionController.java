@@ -46,4 +46,26 @@ public class StockTransactionController {
 
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/warehouse-stock")
+    public int getWarehouseStock(
+            @RequestParam Long productId,
+            @RequestParam Long warehouseId) {
+
+        return stockTransactionService.getWarehouseStock(
+                productId,
+                warehouseId
+        );
+    }
+
+    @GetMapping("/lorry-stock")
+    public int getLorryStock(
+            @RequestParam Long productId,
+            @RequestParam Long lorryId) {
+
+        return stockTransactionService.getLorryStock(
+                productId,
+                lorryId
+        );
+    }
+
 }
